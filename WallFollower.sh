@@ -2,11 +2,6 @@
 
 read inp val
 
-if [ -z "$val" ]
-then
-    val=-1
-fi
-
 if [ $inp == "on" ]
 then
     echo "Starting getting distance from the ultrasonic sensor"
@@ -48,7 +43,7 @@ then
     echo $line > /home/pi/LEO1_portfolio_2/MaxSpeed.txt
 elif [ $inp == "maxspeed" ]
 then
-    if (( $(echo "$val > 0" |bc -l) )) 
+    if [ ! -z "$val" ]
     then
         echo "Change Max Speed to " $val
         echo $val > /home/pi/LEO1_portfolio_2/MaxSpeed.txt
@@ -58,10 +53,10 @@ then
     fi
 elif [ $inp == "walldist" ]
 then
-    if (( $(echo "$val > 0" |bc -l) ))
+    if [ ! -z "$val" ]
     then
         echo "Changing wall distance to " $val
-        echo $val > /home/pi/LEO1_portfolio_2/TargetDist.txt 
+        echo $val > /home/pi/LEO1_portfolio_2/TargetDist.txt
     else
         line=$(head -n 1 "/home/pi/LEO1_portfolio_2/TargetDist.txt")
         echo "Current Target Distance =  " $line

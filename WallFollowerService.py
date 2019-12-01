@@ -47,9 +47,9 @@ def ControllerPID(dist,er_sum, pr_er, max_sp):
     # Compute the new speed
     # 1.2 0.16 0.22
     # 0.39 0.002 0.015
-    kp = 1.4
-    ki = 0.2
-    kd = 0.55
+    kp = 1.5
+    ki = 0.3
+    kd = 0.6
 
     Nsp = kp * er + ki * er_sum * delay + kd * (er - pr_er) / delay
 
@@ -57,49 +57,33 @@ def ControllerPID(dist,er_sum, pr_er, max_sp):
     left = max_sp  + Nsp
     right = max_sp - Nsp
 
-    left = clp((left), 0.5 * max_sp, 0.95)               # clip speed between 0.75 * max_sp, 1.5 * max_sp
-    right = clp((right), 0.5 * max_sp, 0.95)             # clip speed between 0.75 * max_sp, 1.5 * max_sp
+    left = sgn(max_sp) * clp(abs(left), 0.05, 0.95)               # clip speed between 0.05 and 0.95
+    right = sgn(max_sp) * clp(abs(right), 0.05, 0.95)             # clip speed between 0.05 and 0.95
 
     return left, right, er_sum, er
 
-# On-Off controller
-def ControllerOnOff(dist, max_sp):
-    # Get the error
-    er = WallDist - dist
-    
-    left = max_sp + sgn(er) * 0.025 * max_sp
-    right = max_sp - sgn(er) * 0.025 * max_sp
-    
-    return left, right
-
-    
 try:
     prev_dist = int(100 * sensor.distance) / 100
-    WallDist = clp(prev_dist, 0.1, 0.9)
-    fl = open('/home/pi/LEO1_portfolio_2/TargetDist.txt', 'r')
-    WallDist = float(fl.readline())
-    fl.close()
+
     cnt = 0
     # Repeat the next indented block forever
     while True:
         dist = int(100 * sensor.distance) / 100
         dist = int( 100 * 0.5 * (dist + prev_dist)) / 100
+        # Read the target distance from the .txt file
+        fl = open('/home/pi/LEO1_portfolio_2/TargetDist.txt', 'r')
+        WallDist = float(fl.readline())
+        fl.close()
+
         avg_dist = avg_dist + dist
         cnt = cnt + 1
         prev_dist = dist
-        #movement = (sp, sp)
-        #if (dist > WallDist):
-        #    movement = (0.8 * sp, sp)
-        #elif (dist < WallDist):
-        #    movement = (sp, 0.8 * sp)
+        
         fl = open('/home/pi/LEO1_portfolio_2/MaxSpeed.txt', 'r')
         MaxSpeed = float(fl.readline())
         fl.close()
-        if (MaxSpeed > 0):
+        if (MaxSpeed != 0):
             left, right, er_sum, er = ControllerPID(dist, er_sum, er, MaxSpeed)
-            #left, right = ControllerOnOff(dist, 0.4)
-            #er = er * delay
-            #er = sgn(er) * clp(abs(er), 0.05, 1)
         else:
             left = 0
             right = 0
