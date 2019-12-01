@@ -1,0 +1,9 @@
+[Unit]
+Description=Service that is used to follow the wall
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/bin/WallFollowerService.py
+
+[Install]
+WantedBy=multi-user.target

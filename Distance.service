@@ -1,0 +1,9 @@
+[Unit]
+Description=Read the distance using the Ultrasonic sensor and save it to a file.
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/bin/DistanceService.py
+
+[Install]
+WantedBy=multi-user.target
