@@ -51,23 +51,23 @@
  
  ## How to use
  
-  * go to /home/pi/ and type git clone https://github.com/antonikaras/LE01_portfolio_2.git to clone the project
+  * go to /home/pi/ and type `git clone https://github.com/antonikaras/LE01_portfolio_2.git` to clone the project
   * Copy the .py service scripts to /usr/bin/ directory
-    ** sudo cp DistanceService.py /usr/bin/DistanceService.py
-    ** sudo cp WallFollowerService.py /usr/bin/WallFollowerService.py
+    * `sudo cp DistanceService.py /usr/bin/DistanceService.py`
+    * `sudo cp WallFollowerService.py /usr/bin/WallFollowerService.py`
   * Make the above two files excecutables:
-    ** sudo chmod +x /usr/bin/DistanceService.py
-    ** sudo chmod +x /usr/bin/WallFollowerService.py
+    * `sudo chmod +x /usr/bin/DistanceService.py`
+    * `sudo chmod +x /usr/bin/WallFollowerService.py`
   * Copy the service files to /etc/systemd/system directory
-    ** sudo cp Distance.service /etc/systemd/system/Distance.service
-    ** sudo cp WallFollower.service /etc/systemd/system/WallFollower.service
+    * `sudo cp Distance.service /etc/systemd/system/Distance.service`
+    * `sudo cp WallFollower.service /etc/systemd/system/WallFollower.service`
   * Change the permissions of the two above files
-    ** sudo chmod 644 /etc/systemd/system/Distance.service
-    ** sudo chmod 644 /etc/systemd/system/WallFollower.service
+    * `sudo chmod 644 /etc/systemd/system/Distance.service`
+    * `sudo chmod 644 /etc/systemd/system/WallFollower.service`
   * Start the socat server using the following command:
-    ** socat tcp-listen:8080,fork,reuseaddr exec:/home/pi/LEO1_portfolio_2/WallFollower.sh
+    * `socat tcp-listen:8080,fork,reuseaddr exec:/home/pi/LEO1_portfolio_2/WallFollower.sh`
   * Use the following command to communicate with the raspberry pi:
-    ** echo (command) | socat - tcp:(#ip):8080
-    ** command is one of the commands described in the command section
+    * `echo (command) | socat - tcp:(#ip):8080`
+    * command is one of the commands described in the command section
 
   
