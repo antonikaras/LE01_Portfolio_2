@@ -54,8 +54,12 @@ def ControllerPID(dist,er_sum, pr_er, max_sp):
     Nsp = kp * er + ki * er_sum * delay + kd * (er - pr_er) / delay
 
     # Find the new speed for each wheel
-    left = max_sp  + Nsp
-    right = max_sp - Nsp
+    if (max_sp > 0):
+        left = max_sp  + Nsp
+        right = max_sp - Nsp
+    else:
+        left = max_sp - Nsp
+        right = max_sp + Nsp
 
     left = sgn(max_sp) * clp(abs(left), 0.05, 0.95)               # clip speed between 0.05 and 0.95
     right = sgn(max_sp) * clp(abs(right), 0.05, 0.95)             # clip speed between 0.05 and 0.95
@@ -64,7 +68,8 @@ def ControllerPID(dist,er_sum, pr_er, max_sp):
 
 try:
     prev_dist = int(100 * sensor.distance) / 100
-
+    MeasuredDistance = 0.2
+    UseMeasuredDistance = False
     cnt = 0
     # Repeat the next indented block forever
     while True:
@@ -73,6 +78,13 @@ try:
         # Read the target distance from the .txt file
         fl = open('/home/pi/LEO1_portfolio_2/TargetDist.txt', 'r')
         WallDist = float(fl.readline())
+        if (WallDist < 0):
+            if not UseMeasuredDistance:
+                UseMeasuredDistance = True
+                MeasuredDistance = dist
+            WallDist = MeasuredDistance
+        else:
+            UseMeasuredDistance = False
         fl.close()
 
         avg_dist = avg_dist + dist
