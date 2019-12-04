@@ -60,17 +60,9 @@ def ControllerPID(dist,er_sum, pr_er, max_sp):
     else:
         left = max_sp - Nsp
         right = max_sp + Nsp
-    
-    if (abs(left - right) > 0.3):
-        if (left > right):
-            left = max_sp + 0.15
-            right = max_sp - 0.15
-        else:
-            left = max_sp - 0.15
-            right = max_sp + 0.15
-    
-    left = sgn(max_sp) * clp(abs(left), 0.1, 0.95)               # clip speed between 0.05 and 0.95
-    right = sgn(max_sp) * clp(abs(right), 0.1, 0.95)             # clip speed between 0.05 and 0.95
+
+    left = sgn(max_sp) * clp(abs(left), 0.1, 0.99)               # clip speed between 0.05 and 0.95
+    right = sgn(max_sp) * clp(abs(right), 0.1, 0.99)             # clip speed between 0.05 and 0.95
 
     return left, right, er_sum, er
 
